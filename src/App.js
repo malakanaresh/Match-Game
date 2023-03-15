@@ -264,7 +264,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const timmerId = setInterval(this.tick, 1000)
+    this.timmerId = setInterval(this.tick, 1000)
+  }
+
+  callClearIntervel = () => {
+    clearInterval(this.timmerId)
+    clearInterval(this.timmerIp)
   }
 
   onDemandList = tabId => {
@@ -292,6 +297,7 @@ class App extends Component {
       this.setState(prev => ({count: prev.count + 1}))
     } else {
       this.setState({isTrue: false})
+      this.callClearIntervel()
     }
   }
 
@@ -299,10 +305,17 @@ class App extends Component {
     this.setState({timmer: 60})
     this.setState({isTrue: true})
     this.setState({count: 0})
+    this.timmerIp = setInterval(this.tick, 1000)
   }
 
   tick = () => {
-    this.setState(prev => ({timmer: prev.timmer - 1}))
+    const {timmer} = this.state
+    if (timmer === 0) {
+      this.setState({isTrue: false})
+      this.callClearIntervel()
+    } else {
+      this.setState(prev => ({timmer: prev.timmer - 1}))
+    }
   }
 
   render() {
@@ -366,7 +379,7 @@ class App extends Component {
                 alt="trophy"
                 className="trophy"
               />
-              <h1 className="your">YOUR SCORE</h1>
+              <p className="your">YOUR SCORE</p>
               <h1 className="your"> {count}</h1>
               <button type="button" onClick={this.restartTheGame}>
                 <img
